@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name GENESIS_EDGE)(type KiCad)(uri ${KIPRJMOD}/lib/GENESIS_EDGE)(options "")(descr ""))
+  (lib (name PICerino)(type KiCad)(uri ${KIPRJMOD}/lib/PICerino/PICerino.pretty)(options "")(descr ""))
+)
