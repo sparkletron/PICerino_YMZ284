@@ -50,6 +50,9 @@
 void sendData(struct s_sn76489 *p_sn76489, uint8_t data);
 /*** check rate against valid datasheet values ***/
 uint8_t checkRate(uint8_t rate);
+/*** MSB is 0 for TI, meaning binary numbers are backwards ***/
+uint16_t reverseWord(uint16_t data);
+uint8_t  reverseByte(uint8_t data);
 
 /** INITIALIZE AND FREE MY STRUCTS **/
 
@@ -99,18 +102,18 @@ void initSN76489(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataPort
   
   p_sn76489->p_ctrlPortW = p_ctrlPortW;
   
-  *(p_sn76489->p_dataPortW) = 0;
-  
   *(p_sn76489->p_ctrlPortW) = ~0;
   
+  *(p_sn76489->p_dataPortW) = 0;
+  
   /**** mute all ****/
-  sendData(p_sn76489, (VOICE1_ATTN << REG_SHIFT) | 0xF0 | FIRST_BYTE);
+  setSN76489voice1_attn(p_sn76489, 15);
   
-  sendData(p_sn76489, (VOICE2_ATTN << REG_SHIFT) | 0xF0 | FIRST_BYTE);
+  setSN76489voice2_attn(p_sn76489, 15);
   
-  sendData(p_sn76489, (VOICE3_ATTN << REG_SHIFT) | 0xF0 | FIRST_BYTE);
+  setSN76489voice3_attn(p_sn76489, 15);
   
-  sendData(p_sn76489, (NOISE_ATTN << REG_SHIFT)  | 0xF0 | FIRST_BYTE);
+  setSN76489noise_attn(p_sn76489, 15);
   
   return;
 }
@@ -126,52 +129,59 @@ uint16_t getSN76489_FreqDiv(uint32_t refClk, uint32_t voiceFreq)
 /*** set sn76489 voice 1 frequency ***/
 void setSN76489voice1_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv)
 {
-  sendData(p_sn76489, ((freqDiv & 0x03C0) >> 2) | (VOICE1_FREQ << 1) | FIRST_BYTE);
-  sendData(p_sn76489, ((freqDiv & 0x001F) << 2) | SECOND_BYTE);
+  freqDiv = reverseWord(freqDiv);
+  sendData(p_sn76489, ((VOICE1_FREQ << REG_SHIFT) | ((freqDiv & 0xF000) >> 8) | FIRST_BYTE));
+  sendData(p_sn76489, (((freqDiv & 0x0FC0) >> 4) | SECOND_BYTE));
 }
 
 /*** set sn76489 voice 2 frequency ***/
 void setSN76489voice2_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv)
 {
-  sendData(p_sn76489, ((freqDiv & 0x03C0) >> 2) | (VOICE2_FREQ << 1) | FIRST_BYTE);
-  sendData(p_sn76489, ((freqDiv & 0x001F) << 2) | SECOND_BYTE);
+  freqDiv = reverseWord(freqDiv);
+  sendData(p_sn76489, ((VOICE2_FREQ << REG_SHIFT) | ((freqDiv & 0xF000) >> 8) | FIRST_BYTE));
+  sendData(p_sn76489, (((freqDiv & 0x0FC0) >> 4) | SECOND_BYTE));
 }
 
 /*** set sn76489 voice 3 frequency ***/
 void setSN76489voice3_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv)
 {
-  sendData(p_sn76489, ((freqDiv & 0x03C0) >> 2) | (VOICE3_FREQ << 1) | FIRST_BYTE);
-  sendData(p_sn76489, ((freqDiv & 0x001F) << 2) | SECOND_BYTE);
+  freqDiv = reverseWord(freqDiv);
+  sendData(p_sn76489, ((VOICE3_FREQ << REG_SHIFT) | ((freqDiv & 0xF000) >> 8) | FIRST_BYTE));
+  sendData(p_sn76489, (((freqDiv & 0x0FC0) >> 4) | SECOND_BYTE));
 }
 
 /*** set sn76489 voice 1 attenuation ***/
 void setSN76489voice1_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
 {
-  sendData(p_sn76489, (attenuate << 4) | (VOICE1_ATTN << 1) | FIRST_BYTE);
+  attenuate = reverseByte(attenuate);
+  sendData(p_sn76489, (VOICE1_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 voice 2 attenuation ***/
 void setSN76489voice2_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
 {
-  sendData(p_sn76489, (attenuate << 4) | (VOICE2_ATTN << 1) | FIRST_BYTE);
+  attenuate = reverseByte(attenuate);
+  sendData(p_sn76489, (VOICE2_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 voice 3 attenuation ***/
 void setSN76489voice3_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
 {
-  sendData(p_sn76489, (attenuate << 4) | (VOICE3_ATTN << 1) | FIRST_BYTE);
+  attenuate = reverseByte(attenuate);
+  sendData(p_sn76489, (VOICE3_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 noise attenuation ***/
 void setSN76489noise_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
 {
-  sendData(p_sn76489, (attenuate << 4) | (NOISE_ATTN << 1) | FIRST_BYTE);
+  attenuate = reverseByte(attenuate);
+  sendData(p_sn76489, (NOISE_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 noise controls***/
 void setSN76489noiseCtrl(struct s_sn76489 *p_sn76489, uint8_t type, uint8_t rate)
 {
-  sendData(p_sn76489, (rate << 6) | (type << 5) | (NOISE_CTRL << 1) | FIRST_BYTE);
+  sendData(p_sn76489, (NOISE_CTRL << REG_SHIFT) | (rate << 6) | (type << 5) | FIRST_BYTE);
 }
 
 /*** send data to chip ***/
@@ -181,13 +191,15 @@ void sendData(struct s_sn76489 *p_sn76489, uint8_t data)
   
   while(!((*(p_sn76489->p_ctrlPortR) >> p_sn76489->ready) & 0x01));
   
-  *(p_sn76489->p_ctrlPortW) &= ~(1 << p_sn76489->nCE);
-  
   *(p_sn76489->p_dataPortW) = data;
+  
+  *(p_sn76489->p_ctrlPortW) &= ~(1 << p_sn76489->nCE);
   
   *(p_sn76489->p_ctrlPortW) &= ~(1 << p_sn76489->nWE);
   
-  while(!((*(p_sn76489->p_ctrlPortR) >> p_sn76489->ready) & 0x01));
+#ifdef __DELAY_SN76489
+  __delay_us(10);
+#endif
   
   *(p_sn76489->p_ctrlPortW) |= (1 << p_sn76489->nCE);
   
@@ -209,4 +221,35 @@ uint8_t checkRate(uint8_t rate)
     default:
       return 0x00;
   }
+}
+
+/*** MSB is 0 for TI, meaning binary numbers are backwards ***/
+uint16_t reverseWord(uint16_t data)
+{
+  int index = 0;
+  uint16_t temp = 0;
+  
+  for(index = 15; index >= 0; index--)
+  {
+    temp |= (data & 0x0001) << index;
+    
+    data = data >> 1;
+  }
+  
+  return temp;
+}
+
+uint8_t reverseByte(uint8_t data)
+{
+  int index = 0;
+  uint8_t temp = 0;
+  
+  for(index = 7; index >= 0; index--)
+  {
+    temp |= (data & 0x01) << index;
+    
+    data = data >> 1;
+  }
+  
+  return temp;
 }
