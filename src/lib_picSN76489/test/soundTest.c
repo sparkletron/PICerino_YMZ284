@@ -48,7 +48,11 @@ void main(void)
     
     /* PORT E SETUP */
     INTCON2bits.nRBPU = 1;
+    
+    /* disable analog inputs */
+    ANSELA = 0;
     ANSELE = 0;
+    ANSELD = 0;
     
     /* Port E set all to output */
     TRISE = 0;

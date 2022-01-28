@@ -43,7 +43,7 @@
 #define NOISE_ATTN  7
 #define FIRST_BYTE  0x01
 #define SECOND_BYTE 0x00
-#define REG_SHIFT   4
+#define REG_SHIFT   1
 
 /** SEE MY PRIVATES **/
 /*** send data to port and control chip ***/
