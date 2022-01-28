@@ -37,6 +37,10 @@
 #include <xc.h>
 #include <stdint.h>
 
+/* Define for adding delay to SN76489 data pulse. Not needed in testing */
+// #define __DELAY_SN76489
+
+
 /** Struct for containing multiple sn76489 instances **/
 struct s_sn76489
 {
@@ -113,7 +117,7 @@ void setSN76489voice3_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv);
  * @brief   set sn76489 voice 1 attenuation
  * 
  * @param   struct s_sn76489 *p_sn76489 object
- * @param   uint8_t attenuation : 1 = 16db, 2 = 8db, 4 = 4db, 8 = 2 db, 15 = Mute 
+ * @param   uint8_t attenuation : 8 = 16db, 4 = 8db, 2 = 4db, 1 = 2 db, 15 = Mute 
  ******************************************************************************/
 void setSN76489voice1_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate);
 
@@ -121,7 +125,7 @@ void setSN76489voice1_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate);
  * @brief   set sn76489 voice 2 attenuation
  * 
  * @param   struct s_sn76489 *p_sn76489 object
- * @param   uint8_t attenuation : 1 = 16db, 2 = 8db, 4 = 4db, 8 = 2 db, 15 = Mute 
+ * @param   uint8_t attenuation : 8 = 16db, 4 = 8db, 2 = 4db, 1 = 2 db, 15 = Mute 
  ******************************************************************************/
 void setSN76489voice2_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate);
 
@@ -129,7 +133,7 @@ void setSN76489voice2_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate);
  * @brief   set sn76489 voice 3 attenuation
  * 
  * @param   struct s_sn76489 *p_sn76489 object
- * @param   uint8_t attenuation : 1 = 16db, 2 = 8db, 4 = 4db, 8 = 2 db, 15 = Mute 
+ * @param   uint8_t attenuation : 8 = 16db, 4 = 8db, 2 = 4db, 1 = 2 db, 15 = Mute 
  ******************************************************************************/
 void setSN76489voice3_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate);
 
@@ -148,6 +152,6 @@ void setSN76489noise_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate);
  * @param   uint8_t type : 0 = periodic, 1 = white.
  * @param   uint8_t rate : 0 = N/512, 1 = N/2048, 2 = N/1024, 3 = voice 3 
  ******************************************************************************/
-void setSN76489noiseType(struct s_sn76489 *p_sn76489, uint8_t type, uint8_t rate);
+void setSN76489noiseCtrl(struct s_sn76489 *p_sn76489, uint8_t type, uint8_t rate);
 
 #endif
