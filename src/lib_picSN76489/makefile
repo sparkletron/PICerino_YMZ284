@@ -8,7 +8,7 @@ OUT = $(addprefix $(OUTDIR)/, $(PROJ_NAME))
 TESTDIR = test
 TESTSRC = $(wildcard $(TESTDIR)/*.c)
 TESTOUT = $(TESTDIR)/out/
-TEST = $(addprefix $(TESTOUT), $(basename $(notdir $(TESTSRC))))
+TEST = $(addsuffix .hex, $(addprefix $(TESTOUT), $(basename $(notdir $(TESTSRC)))))
 MCPU = 18F45K50
 
 CC = xc8-cc
