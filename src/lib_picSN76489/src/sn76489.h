@@ -45,8 +45,8 @@
 struct s_sn76489
 {
   volatile unsigned char *p_dataPortW;
-  volatile unsigned char *p_ctrlPortR;
   volatile unsigned char *p_ctrlPortW;
+  volatile unsigned char *p_readyPortR;
   uint8_t nWE;
   uint8_t nCE;
   uint8_t ready;
@@ -60,21 +60,22 @@ struct s_sn76489
  * @param   struct s_sn76489 *p_sn76489
  * @param   volatile unsigned char *p_dataTRIS
  * @param   volatile unsigned char *p_ctrlTRIS
+ * @param   volatile unsigned char *p_readyTRIS
  * @param   uint8_t nWE
  * @param   uint8_t nCE
  * @param   uint8_t ready
  ******************************************************************************/
-void initSN76489port(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataTRIS, volatile unsigned char *p_ctrlTRIS, uint8_t nWE, uint8_t nCE, uint8_t ready);
+void initSN76489port(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataTRIS, volatile unsigned char *p_ctrlTRIS, volatile unsigned char *p_readyTRIS, uint8_t nWE, uint8_t nCE, uint8_t ready);
 
 /*******************************************************************************
  * @brief   Initialize sn76489 struct with params
  * 
  * @param   struct s_sn76489 *p_sn76489
  * @param   volatile unsigned char *p_dataPortW
- * @param   volatile unsigned char *p_ctrlPortR
- * @param   volatile unsigned char *p_ctrlPortW
+ * @param   volatile unsigned char *p_ctrlPortw
+ * @param   volatile unsigned char *p_readyPortR
  ******************************************************************************/
-void initSN76489(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataPortW, volatile unsigned char *p_ctrlPortR, volatile unsigned char *p_ctrlPortW);
+void initSN76489(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataPortW, volatile unsigned char *p_ctrlPortW, volatile unsigned char *p_readyPortR);
 
 
 /*******************************************************************************

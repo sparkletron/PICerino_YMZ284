@@ -55,8 +55,9 @@ void main(void)
 
   /* disable analog inputs */
   ANSELA = 0;
-  ANSELE = 0;
+  ANSELC = 0;
   ANSELD = 0;
+  ANSELE = 0;
 
   /* Port E set all to output */
   TRISE = 0;
@@ -68,9 +69,9 @@ void main(void)
   /* wait for chip to be ready */
   __delay_ms(10);
 
-  initSN76489port(&sn76489, &TRISA, &TRISD, 6, 7, 5);
+  initSN76489port(&sn76489, &TRISA, &TRISD, &TRISC, 6, 7, 5);
 
-  initSN76489(&sn76489, &LATA, &PORTD, &LATD);
+  initSN76489(&sn76489, &LATA, &LATD, &PORTC);
 
   /* chip tests */
   /* voice one freq test */
@@ -166,6 +167,8 @@ void main(void)
   /* test noise */
   attn = 0;
   
+  LATE = 3;
+  
   setSN76489noise_attn(&sn76489, 2);
   
   /** Periodic noise **/
@@ -191,6 +194,8 @@ void main(void)
   } while(attn < (1 << 4));
   
   shiftRate = 0;
+  
+  LATE = 7;
   
   setSN76489noise_attn(&sn76489, 2);
   

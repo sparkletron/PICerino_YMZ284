@@ -57,11 +57,13 @@ uint8_t  reverseByte(uint8_t data);
 /** INITIALIZE AND FREE MY STRUCTS **/
 
 /*** Initialize sn76489 tris port direction and struct pins ***/
-void initSN76489port(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataTRIS, volatile unsigned char *p_ctrlTRIS, uint8_t nWE, uint8_t nCE, uint8_t ready)
+void initSN76489port(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataTRIS, volatile unsigned char *p_ctrlTRIS, volatile unsigned char *p_readyTRIS, uint8_t nWE, uint8_t nCE, uint8_t ready)
 {
   if(!p_dataTRIS) return;
   
   if(!p_ctrlTRIS) return;
+  
+  if(!p_readyTRIS) return;
   
   if(!p_sn76489) return;
   
@@ -72,7 +74,7 @@ void initSN76489port(struct s_sn76489 *p_sn76489, volatile unsigned char *p_data
   *p_ctrlTRIS &= ~((1 << nWE) | (1 << nCE));
   
   /**** ready is input ****/
-  *p_ctrlTRIS |= (1 << ready);
+  *p_readyTRIS |= (1 << ready);
   
   /**** setup struct with pin locations ****/
   p_sn76489->nWE = nWE;
@@ -85,20 +87,20 @@ void initSN76489port(struct s_sn76489 *p_sn76489, volatile unsigned char *p_data
 }
 
 /*** Initialize sn76489 struct ports ***/
-void initSN76489(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataPortW, volatile unsigned char *p_ctrlPortR, volatile unsigned char *p_ctrlPortW)
+void initSN76489(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataPortW, volatile unsigned char *p_ctrlPortW, volatile unsigned char *p_readyPortR)
 {
   if(!p_dataPortW) return;
   
-  if(!p_ctrlPortR) return;
-  
   if(!p_ctrlPortW) return;
+  
+  if(!p_readyPortR) return;
   
   if(!p_sn76489)  return;
   
   /**** setup ports for library usage ****/
   p_sn76489->p_dataPortW = p_dataPortW;
   
-  p_sn76489->p_ctrlPortR = p_ctrlPortR;
+  p_sn76489->p_readyPortR = p_readyPortR;
   
   p_sn76489->p_ctrlPortW = p_ctrlPortW;
   
@@ -189,7 +191,7 @@ void sendData(struct s_sn76489 *p_sn76489, uint8_t data)
 {
   di();
   
-  while(!((*(p_sn76489->p_ctrlPortR) >> p_sn76489->ready) & 0x01));
+  while(!((*(p_sn76489->p_readyPortR) >> p_sn76489->ready) & 0x01));
   
   *(p_sn76489->p_dataPortW) = data;
   
