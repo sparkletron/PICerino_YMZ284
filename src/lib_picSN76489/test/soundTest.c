@@ -69,7 +69,7 @@ void main(void)
   /* wait for chip to be ready */
   __delay_ms(10);
 
-  initSN76489port(&sn76489, &TRISA, &TRISD, &TRISC, 6, 7, 5);
+  initSN76489port(&sn76489, &TRISA, &TRISD, &TRISC, 6, 7, 7);
 
   initSN76489(&sn76489, &LATA, &LATD, &PORTC);
 
