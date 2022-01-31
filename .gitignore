@@ -2,4 +2,5 @@
 **/obj 
 **/out
 **/doxygen
+*.a
 *.*-bak
