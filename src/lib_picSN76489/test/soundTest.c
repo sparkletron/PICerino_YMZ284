@@ -229,7 +229,7 @@ void main(void)
   for(;;)
   {
     LATE = g_porteBuffer;
-    g_porteBuffer = (g_porteBuffer == 4 ? 1 : g_porteBuffer << 1);
+    g_porteBuffer = (g_porteBuffer == 4 ? 1 : (unsigned)g_porteBuffer << 1);
     __delay_ms(100);
   }
 }

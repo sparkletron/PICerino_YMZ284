@@ -30,7 +30,7 @@
 #include <xc.h>
 #include <stdint.h>
 
-#include "sn76489.h"
+#include <sn76489.h>
 
 /** DEFINES **/
 #define VOICE1_FREQ 0
@@ -71,10 +71,10 @@ void initSN76489port(struct s_sn76489 *p_sn76489, volatile unsigned char *p_data
   *p_dataTRIS = 0;
   
   /**** nWE is output, nCE is output ****/
-  *p_ctrlTRIS &= ~((1 << nWE) | (1 << nCE));
+  *p_ctrlTRIS &= ~(((unsigned)1 << nWE) | ((unsigned)1 << nCE));
   
   /**** ready is input ****/
-  *p_readyTRIS |= (1 << ready);
+  *p_readyTRIS |= ((unsigned)1 << ready);
   
   /**** setup struct with pin locations ****/
   p_sn76489->nWE = nWE;
@@ -123,7 +123,7 @@ void initSN76489(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataPort
 /*** calculate freqDiv ***/
 uint16_t getSN76489_FreqDiv(uint32_t refClk, uint32_t voiceFreq)
 {
-  return (refClk/(5 << voiceFreq)) & 0x03FF;
+  return (refClk/((unsigned)5 << voiceFreq)) & 0x03FF;
 }
 
 /** SET YOUR DATA **/
@@ -156,34 +156,34 @@ void setSN76489voice3_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv)
 void setSN76489voice1_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
 {
   attenuate = reverseByte(attenuate);
-  sendData(p_sn76489, (VOICE1_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
+  sendData(p_sn76489, ((unsigned)VOICE1_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 voice 2 attenuation ***/
 void setSN76489voice2_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
 {
   attenuate = reverseByte(attenuate);
-  sendData(p_sn76489, (VOICE2_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
+  sendData(p_sn76489, ((unsigned)VOICE2_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 voice 3 attenuation ***/
 void setSN76489voice3_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
 {
   attenuate = reverseByte(attenuate);
-  sendData(p_sn76489, (VOICE3_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
+  sendData(p_sn76489, ((unsigned)VOICE3_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 noise attenuation ***/
 void setSN76489noise_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
 {
   attenuate = reverseByte(attenuate);
-  sendData(p_sn76489, (NOISE_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
+  sendData(p_sn76489, ((unsigned)NOISE_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 noise controls***/
 void setSN76489noiseCtrl(struct s_sn76489 *p_sn76489, uint8_t type, uint8_t rate)
 {
-  sendData(p_sn76489, (NOISE_CTRL << REG_SHIFT) | (rate << 6) | (type << 5) | FIRST_BYTE);
+  sendData(p_sn76489, ((unsigned)NOISE_CTRL << REG_SHIFT) | ((unsigned)rate << 6) | ((unsigned)type << 5) | FIRST_BYTE);
 }
 
 /*** send data to chip ***/
@@ -191,21 +191,26 @@ void sendData(struct s_sn76489 *p_sn76489, uint8_t data)
 {
   di();
   
+  /*** make sure we are ready for data ***/
   while(!((*(p_sn76489->p_readyPortR) >> p_sn76489->ready) & 0x01));
   
   *(p_sn76489->p_dataPortW) = data;
   
-  *(p_sn76489->p_ctrlPortW) &= ~(1 << p_sn76489->nCE);
+  *(p_sn76489->p_ctrlPortW) &= ~((unsigned)1 << p_sn76489->nCE);
   
-  *(p_sn76489->p_ctrlPortW) &= ~(1 << p_sn76489->nWE);
+  *(p_sn76489->p_ctrlPortW) &= ~((unsigned)1 << p_sn76489->nWE);
   
-#ifdef __DELAY_SN76489
-  __delay_us(10);
+#ifdef __DELAY_READY
+  __delay_ms(10);
 #endif
   
-  *(p_sn76489->p_ctrlPortW) |= (1 << p_sn76489->nCE);
+#ifdef __LOOP_READY
+  while(!((*(p_sn76489->p_readyPortR) >> p_sn76489->ready) & 0x01));
+#endif
   
-  *(p_sn76489->p_ctrlPortW) |= (1 << p_sn76489->nWE);
+  *(p_sn76489->p_ctrlPortW) |= ((unsigned)1 << p_sn76489->nCE);
+  
+  *(p_sn76489->p_ctrlPortW) |= ((unsigned)1 << p_sn76489->nWE);
   
   ei();
 }
@@ -241,6 +246,7 @@ uint16_t reverseWord(uint16_t data)
   return temp;
 }
 
+/*** MSB is 0 for TI, meaning binary numbers are backwards ***/
 uint8_t reverseByte(uint8_t data)
 {
   int index = 0;
@@ -248,9 +254,9 @@ uint8_t reverseByte(uint8_t data)
   
   for(index = 7; index >= 0; index--)
   {
-    temp |= (data & 0x01) << index;
+    temp |= (unsigned)(data & 0x01) << index;
     
-    data = data >> 1;
+    data = (unsigned)(data >> 1);
   }
   
   return temp;
