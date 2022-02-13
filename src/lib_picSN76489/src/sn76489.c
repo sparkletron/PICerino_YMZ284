@@ -82,8 +82,6 @@ void initSN76489port(struct s_sn76489 *p_sn76489, volatile unsigned char *p_data
   p_sn76489->nCE = nCE;
   
   p_sn76489->ready = ready;
-  
-  return;
 }
 
 /*** Initialize sn76489 struct ports ***/
@@ -116,8 +114,6 @@ void initSN76489(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataPort
   setSN76489voice3_attn(p_sn76489, 15);
   
   setSN76489noise_attn(p_sn76489, 15);
-  
-  return;
 }
 
 /*** calculate freqDiv ***/
