@@ -4,7 +4,7 @@ Test Board and Software Library for TI SN76489 sound chips.
 
 author: Jay Convertino  
 
-data: 2022.01.27  
+date: 2022.01.27  
 
 license: MIT (software), None (hardware)
 
