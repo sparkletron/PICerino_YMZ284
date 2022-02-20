@@ -273,11 +273,11 @@ X RA4 B9 900 -900 200 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# Vintage_PC_Audio_sn76489an
+# picerino_sn76489AN-rescue_sn76489an-Vintage_PC_Audio
 #
-DEF Vintage_PC_Audio_sn76489an U 0 40 Y Y 1 F N
+DEF picerino_sn76489AN-rescue_sn76489an-Vintage_PC_Audio U 0 40 Y Y 1 F N
 F0 "U" 0 300 50 H V C CNN
-F1 "Vintage_PC_Audio_sn76489an" 0 200 50 H V C CNN
+F1 "picerino_sn76489AN-rescue_sn76489an-Vintage_PC_Audio" 0 200 50 H V C CNN
 F2 "" -350 -50 50 H I C CNN
 F3 "" -350 -50 50 H I C CNN
 DRAW

@@ -191,7 +191,7 @@ F 3 "" H 3900 4000 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L Vintage_PC_Audio:sn76489an U1
+L picerino_sn76489AN-rescue:sn76489an-Vintage_PC_Audio U1
 U 1 1 61DA60DE
 P 4450 3400
 F 0 "U1" H 4450 3725 50  0000 C CNN
@@ -583,21 +583,21 @@ F 3 "" H 3500 2950 50  0001 C CNN
 	1    3500 2950
 	1    0    0    -1  
 $EndComp
-Text Label 3000 4600 0    50   ~ 0
-D4
 Text Label 3000 4500 0    50   ~ 0
+D4
+Text Label 3000 4600 0    50   ~ 0
 D3
-Text Label 3000 4400 0    50   ~ 0
-D2
 Text Label 3000 4700 0    50   ~ 0
+D2
+Text Label 3000 4400 0    50   ~ 0
 D5
-Text Label 3000 4300 0    50   ~ 0
-D1
 Text Label 3000 4900 0    50   ~ 0
+D1
+Text Label 3000 4300 0    50   ~ 0
 D6
-Text Label 3000 4800 0    50   ~ 0
-D7
 Text Label 3000 4200 0    50   ~ 0
+D7
+Text Label 3000 4800 0    50   ~ 0
 D0
 $Comp
 L Device:R R7
@@ -722,11 +722,11 @@ Wire Wire Line
 	3100 3800 3100 3600
 Wire Wire Line
 	3100 3600 3500 3600
+Connection ~ 3500 3600
 Wire Bus Line
 	3700 1800 3700 3400
 Wire Bus Line
 	5350 1800 5350 3800
 Wire Bus Line
 	3200 4300 3200 5750
-Connection ~ 3500 3600
 $EndSCHEMATC

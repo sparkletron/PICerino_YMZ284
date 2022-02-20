@@ -1,4 +1,5 @@
 (sym_lib_table
   (lib (name Vintage_PC_Audio)(type Legacy)(uri ${KIPRJMOD}/lib/VINTAGE_PC_AUDIO/Vintage_PC_Audio.lib)(options "")(descr ""))
   (lib (name Picerino)(type Legacy)(uri ${KIPRJMOD}/lib/PICerino/Picerino.lib)(options "")(descr ""))
+  (lib (name picerino_sn76489AN-rescue)(type Legacy)(uri ${KIPRJMOD}/picerino_sn76489AN-rescue.lib)(options "")(descr ""))
 )
