@@ -23,7 +23,7 @@ ARFLAGS = -r
 
 all: $(OUT) $(TEST) dox_gen
 
-$(TEST): $(TESTSRC)
+$(TEST): $(TESTSRC) $(OUT)
 	mkdir -p $(TESTOUT)
 	$(CC) $(CFLAGS) $< -o $@ $(LFLAGS)
 

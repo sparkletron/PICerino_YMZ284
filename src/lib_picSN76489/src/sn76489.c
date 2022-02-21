@@ -35,21 +35,19 @@
 /** DEFINES **/
 #define VOICE1_FREQ 0
 #define VOICE2_FREQ 2
-#define VOICE3_FREQ 1
-#define VOICE1_ATTN 4
-#define VOICE2_ATTN 6
+#define VOICE3_FREQ 4
+#define VOICE1_ATTN 1
+#define VOICE2_ATTN 3
 #define VOICE3_ATTN 5
-#define NOISE_CTRL  3
+#define NOISE_CTRL  6
 #define NOISE_ATTN  7
-#define FIRST_BYTE  0x01
+#define FIRST_BYTE  0x80
 #define SECOND_BYTE 0x00
-#define REG_SHIFT   1
+#define REG_SHIFT   4
 
 /** SEE MY PRIVATES **/
 /*** send data to port and control chip ***/
 void sendData(struct s_sn76489 *p_sn76489, uint8_t data);
-/*** check rate against valid datasheet values ***/
-uint8_t checkRate(uint8_t rate);
 
 /** INITIALIZE AND FREE MY STRUCTS **/
 
@@ -104,11 +102,12 @@ void initSN76489(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataPort
   *(p_sn76489->p_dataPortW) = 0;
   
   /**** mute all ****/
-  setSN76489voice1_attn(p_sn76489, 15);
   
-  setSN76489voice2_attn(p_sn76489, 15);
+  setSN76489voice_attn(p_sn76489, 1, 15);
   
-  setSN76489voice3_attn(p_sn76489, 15);
+  setSN76489voice_attn(p_sn76489, 2, 15);
+  
+  setSN76489voice_attn(p_sn76489, 3, 15);
   
   setSN76489noise_attn(p_sn76489, 15);
 }
@@ -121,60 +120,85 @@ uint16_t getSN76489_FreqDiv(uint32_t refClk, uint32_t voiceFreq)
 
 /** SET YOUR DATA **/
 
-/*** set sn76489 voice 1 frequency ***/
-void setSN76489voice1_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv)
+/*** set sn76489 voice frequency ***/
+void setSN76489voice_freq(struct s_sn76489 *p_sn76489, uint8_t voice, uint16_t freqDiv)
 {
-  sendData(p_sn76489, ((VOICE1_FREQ << REG_SHIFT) | ((freqDiv & 0xF000) >> 8) | FIRST_BYTE));
-  sendData(p_sn76489, (((freqDiv & 0x0FC0) >> 4) | SECOND_BYTE));
+  uint8_t regVoice = 0;
+  
+  /**** NULL check ****/
+  if(!p_sn76489) return;
+  
+  switch(voice)
+  {
+    case 1:
+      regVoice = VOICE1_FREQ;
+      break;
+    case 2:
+      regVoice = VOICE2_FREQ;
+      break;
+    case 3:
+      regVoice = VOICE3_FREQ;
+      break;
+    default:
+      regVoice = VOICE1_FREQ;
+      break;
+  }
+  
+  sendData(p_sn76489, (((unsigned)regVoice << REG_SHIFT) | (freqDiv & 0x000F) | FIRST_BYTE));
+  sendData(p_sn76489, (((freqDiv & 0x03F0) >> 4) | SECOND_BYTE));
 }
 
-/*** set sn76489 voice 2 frequency ***/
-void setSN76489voice2_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv)
+/*** set sn76489 voice attenuation ***/
+void setSN76489voice_attn(struct s_sn76489 *p_sn76489, uint8_t voice, uint8_t attenuate)
 {
-  sendData(p_sn76489, ((VOICE2_FREQ << REG_SHIFT) | ((freqDiv & 0xF000) >> 8) | FIRST_BYTE));
-  sendData(p_sn76489, (((freqDiv & 0x0FC0) >> 4) | SECOND_BYTE));
-}
-
-/*** set sn76489 voice 3 frequency ***/
-void setSN76489voice3_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv)
-{
-  sendData(p_sn76489, ((VOICE3_FREQ << REG_SHIFT) | ((freqDiv & 0xF000) >> 8) | FIRST_BYTE));
-  sendData(p_sn76489, (((freqDiv & 0x0FC0) >> 4) | SECOND_BYTE));
-}
-
-/*** set sn76489 voice 1 attenuation ***/
-void setSN76489voice1_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
-{
-  sendData(p_sn76489, ((unsigned)VOICE1_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
-}
-
-/*** set sn76489 voice 2 attenuation ***/
-void setSN76489voice2_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
-{
-  sendData(p_sn76489, ((unsigned)VOICE2_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
-}
-
-/*** set sn76489 voice 3 attenuation ***/
-void setSN76489voice3_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
-{
-  sendData(p_sn76489, ((unsigned)VOICE3_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
+  uint8_t regVoice = 0;
+  
+  /**** NULL check ****/
+  if(!p_sn76489) return;
+  
+  switch(voice)
+  {
+    case 1:
+      regVoice = VOICE1_ATTN;
+      break;
+    case 2:
+      regVoice = VOICE2_ATTN;
+      break;
+    case 3:
+      regVoice = VOICE3_ATTN;
+      break;
+    default:
+      regVoice = VOICE1_ATTN;
+      break;
+  }
+  
+  sendData(p_sn76489, ((unsigned)regVoice << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 noise attenuation ***/
 void setSN76489noise_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate)
 {
+  /**** NULL check ****/
+  if(!p_sn76489) return;
+  
   sendData(p_sn76489, ((unsigned)NOISE_ATTN << REG_SHIFT) | attenuate | FIRST_BYTE);
 }
 
 /*** set sn76489 noise controls***/
 void setSN76489noiseCtrl(struct s_sn76489 *p_sn76489, uint8_t type, uint8_t rate)
 {
-  sendData(p_sn76489, ((unsigned)NOISE_CTRL << REG_SHIFT) | ((unsigned)rate << 6) | ((unsigned)type << 5) | FIRST_BYTE);
+  /**** NULL check ****/
+  if(!p_sn76489) return;
+  
+  sendData(p_sn76489, ((unsigned)NOISE_CTRL << REG_SHIFT) | (unsigned)rate | ((unsigned)type << 2) | FIRST_BYTE);
 }
 
 /*** send data to chip ***/
 void sendData(struct s_sn76489 *p_sn76489, uint8_t data)
 {
+  /**** NULL check ****/
+  if(!p_sn76489) return;
+  
   di();
   
   /*** make sure we are ready for data ***/
@@ -182,9 +206,7 @@ void sendData(struct s_sn76489 *p_sn76489, uint8_t data)
   
   *(p_sn76489->p_dataPortW) = data;
   
-  *(p_sn76489->p_ctrlPortW) &= ~((unsigned)1 << p_sn76489->nCE);
-  
-  *(p_sn76489->p_ctrlPortW) &= ~((unsigned)1 << p_sn76489->nWE);
+  *(p_sn76489->p_ctrlPortW) &= ~((unsigned)1 << p_sn76489->nCE) & ~((unsigned)1 << p_sn76489->nWE);;
   
 #ifdef __DELAY_READY
   __delay_ms(10);
@@ -194,24 +216,7 @@ void sendData(struct s_sn76489 *p_sn76489, uint8_t data)
   while(!((*(p_sn76489->p_readyPortR) >> p_sn76489->ready) & 0x01));
 #endif
   
-  *(p_sn76489->p_ctrlPortW) |= ((unsigned)1 << p_sn76489->nCE);
-  
-  *(p_sn76489->p_ctrlPortW) |= ((unsigned)1 << p_sn76489->nWE);
+  *(p_sn76489->p_ctrlPortW) |= ((unsigned)1 << p_sn76489->nCE) | ((unsigned)1 << p_sn76489->nWE);
   
   ei();
-}
-
-/*** check the rate against valid values ***/
-uint8_t checkRate(uint8_t rate)
-{
-  switch(rate)
-  {
-    case 0x00:
-    case 0x01:
-    case 0x02:
-    case 0x03:
-      return rate;
-    default:
-      return 0x00;
-  }
 }

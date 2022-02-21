@@ -37,9 +37,10 @@ uint8_t g_porteBuffer = 0;
 
 void main(void) 
 {
+  uint8_t  index = 0;
   uint16_t freq = 0;
-  uint8_t attn = 0;
-  uint8_t shiftRate = 0;
+  uint8_t  attn = 0;
+  uint8_t  shiftRate = 0;
   
   struct s_sn76489 sn76489;
 
@@ -72,159 +73,105 @@ void main(void)
   initSN76489port(&sn76489, &TRISA, &TRISD, &TRISC, 6, 7, 7);
 
   initSN76489(&sn76489, &LATA, &LATD, &PORTC);
+  
+//   setSN76489voice_freq(&sn76489, 1, 254);
 
   /* chip tests */
-  /* voice one freq test */
-  LATE = (1 << 0);
-  
-  setSN76489voice1_attn(&sn76489, 2);
-  
-  do
-  {
-    setSN76489voice1_freq(&sn76489, freq);
-    
-    __delay_ms(5);
-    
-    freq++;
-    
-  } while(freq < (1 << 10));
-  
-  setSN76489voice1_freq(&sn76489, 254);
-  
-  /* voice one attn test */
-  do
-  {
-    setSN76489voice1_attn(&sn76489, attn);
-    
-    __delay_ms(500);
-    
-    attn++;
-    
-  } while(attn < (1 << 4));
-
-  /* voice two freq test */
-  freq = 0;
-  attn = 0;
-  
-  LATE = (1 << 1);
-  
-  setSN76489voice2_attn(&sn76489, 2);
-  
-  do
-  {
-    setSN76489voice2_freq(&sn76489, freq);
-    
-    __delay_ms(5);
-    
-    freq++;
-    
-  } while(freq < (1 << 10));
-  
-  setSN76489voice2_freq(&sn76489, 254);
-  
-  /* voice two attn test */
-  do
-  {
-    setSN76489voice2_attn(&sn76489, attn);
-    
-    __delay_ms(500);
-    
-    attn++;
-    
-  } while(attn < (1 << 4));
-  
-  /* voice three freq test */
-  freq = 0;
-  attn = 0;
-  
-  LATE = (1 << 2);
-  
-  setSN76489voice3_attn(&sn76489, 2);
-  
-  do
-  {
-    setSN76489voice3_freq(&sn76489, freq);
-    
-    __delay_ms(5);
-    
-    freq++;
-    
-  } while(freq < (1 << 10));
-  
-  setSN76489voice3_freq(&sn76489, 254);
-  
-  /* voice three attn test */
-  do
-  {
-    setSN76489voice3_attn(&sn76489, attn);
-    
-    __delay_ms(500);
-    
-    attn++;
-    
-  } while(attn < (1 << 4));
-  
-  /* test noise */
-  attn = 0;
-  
-  LATE = 3;
-  
-  setSN76489noise_attn(&sn76489, 2);
-  
-  /** Periodic noise **/
-  do
-  {
-    setSN76489noiseCtrl(&sn76489, 0, shiftRate);
-    
-    __delay_ms(2000);
-    
-    shiftRate++;
-    
-  } while(shiftRate < (1 << 2));
-  
-  /* noise attn test */
-  do
-  {
-    setSN76489noise_attn(&sn76489, attn);
-    
-    __delay_ms(500);
-    
-    attn++;
-    
-  } while(attn < (1 << 4));
-  
-  shiftRate = 0;
-  
-  LATE = 7;
-  
-  setSN76489noise_attn(&sn76489, 2);
-  
-  /** White noise **/
-  do
-  {
-    setSN76489noiseCtrl(&sn76489, 1, shiftRate);
-    
-    __delay_ms(2000);
-    
-    shiftRate++;
-    
-  } while(shiftRate < (1 << 2));
-  
-  attn = 0;
-  
-  /* noise attn test */
-  do
-  {
-    setSN76489noise_attn(&sn76489, attn);
-    
-    __delay_ms(500);
-    
-    attn++;
-    
-  } while(attn < (1 << 4));
-  
-  /* done testing */
-  LATE = 0;
+//   for(index = 1; index <= 3; index++)
+//   {
+//     attn = 0;
+//     freq = 0;
+//     
+//     LATE = (unsigned)(1 << (index-1));
+//     
+//     setSN76489voice_attn(&sn76489, index, 2);
+//     
+//     /* voice freq test */
+//     do
+//     {
+//       setSN76489voice_freq(&sn76489, index, freq);
+//       
+//       __delay_ms(5);
+//       
+//       freq++;
+//       
+//     } while(freq < (1 << 10));
+//     
+//     setSN76489voice_freq(&sn76489, index, 254);
+//     
+//     /* voice attn test */
+//     do
+//     {
+//       setSN76489voice_attn(&sn76489, index, attn);
+//       
+//       __delay_ms(500);
+//       
+//       attn++;
+//       
+//     } while(attn < (1 << 4));
+//   }
+//  
+//   /* test noise */
+//   attn = 0;
+//   
+//   LATE = 3;
+//   
+//   setSN76489noise_attn(&sn76489, 2);
+//   
+//   /** Periodic noise **/
+//   do
+//   {
+//     setSN76489noiseCtrl(&sn76489, 0, shiftRate);
+//     
+//     __delay_ms(2000);
+//     
+//     shiftRate++;
+//     
+//   } while(shiftRate < (1 << 2));
+//   
+//   /* noise attn test */
+//   do
+//   {
+//     setSN76489noise_attn(&sn76489, attn);
+//     
+//     __delay_ms(500);
+//     
+//     attn++;
+//     
+//   } while(attn < (1 << 4));
+//   
+//   shiftRate = 0;
+//   
+//   LATE = 6;
+//   
+//   setSN76489noise_attn(&sn76489, 2);
+//   
+//   /** White noise **/
+//   do
+//   {
+//     setSN76489noiseCtrl(&sn76489, 1, shiftRate);
+//     
+//     __delay_ms(2000);
+//     
+//     shiftRate++;
+//     
+//   } while(shiftRate < (1 << 2));
+//   
+//   attn = 0;
+//   
+//   /* noise attn test */
+//   do
+//   {
+//     setSN76489noise_attn(&sn76489, attn);
+//     
+//     __delay_ms(500);
+//     
+//     attn++;
+//     
+//   } while(attn < (1 << 4));
+//   
+//   /* done testing */
+//   LATE = 0;
   
   for(;;)
   {

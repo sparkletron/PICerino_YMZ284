@@ -38,16 +38,16 @@
 #include <xc.h>
 #include <stdint.h>
 
-// __DELAY_READY define, MUST USE __XTAL_FREQ define as well in this header.
+// __DELAY_READY define, MUST USE _XTAL_FREQ define as well in this header.
 // #define __DELAY_READY
-// #define __XTAL_FREQ
+// #define _XTAL_FREQ  48000000
 
 /**
  * @def __LOOP_READY
  * Use loop check of ready, default method. Its a bit slow, and has issues
  * with setting data multiple times.
  */
-#define __LOOP_READY
+//#define __LOOP_READY
 
 /**
  * @struct s_sn76489 
@@ -122,51 +122,22 @@ void initSN76489(struct s_sn76489 *p_sn76489, volatile unsigned char *p_dataPort
 uint16_t getSN76489_FreqDiv(uint32_t refClk, uint32_t voiceFreq);
 
 /***************************************************************************//**
- * @brief   Set sn76489 voice 1 frequency
+ * @brief   Set sn76489 voice frequency
  * 
  * @param   p_sn76489 pointer to a struct that contains chip data.
+ * @param   voice the voice (1,2, or 3) to set the frequency to.
  * @param   freqDiv is binary number to set the frequency (f = refClk/(32*freqDiv))
  ******************************************************************************/
-void setSN76489voice1_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv);
+void setSN76489voice_freq(struct s_sn76489 *p_sn76489, uint8_t voice, uint16_t freqDiv);
 
 /***************************************************************************//**
- * @brief   Set sn76489 voice 2 frequency
+ * @brief   Set sn76489 voice attenuation
  * 
  * @param   p_sn76489 pointer to a struct that contains chip data.
- * @param   freqDiv is binary number to set the frequency (f = refClk/(32*freqDiv))
- ******************************************************************************/
-void setSN76489voice2_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv);
-
-/***************************************************************************//**
- * @brief   Set sn76489 voice 3 frequency
- * 
- * @param   p_sn76489 pointer to a struct that contains chip data.
- * @param   freqDiv is binary number to set the frequency (f = refClk/(32*freqDiv))
- ******************************************************************************/
-void setSN76489voice3_freq(struct s_sn76489 *p_sn76489, uint16_t freqDiv);
-
-/***************************************************************************//**
- * @brief   Set sn76489 voice 1 attenuation
- * 
- * @param   p_sn76489 pointer to a struct that contains chip data.
+ * @param   voice the voice (1,2, or 3) to set the attenuation to.
  * @param   attenuate : 8 = 16db, 4 = 8db, 2 = 4db, 1 = 2 db, 15 = Mute 
  ******************************************************************************/
-void setSN76489voice1_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate);
-/***************************************************************************//**
- * @brief   Set sn76489 voice 2 attenuation
- * 
- * @param   p_sn76489 pointer to a struct that contains chip data.
- * @param   attenuate : 8 = 16db, 4 = 8db, 2 = 4db, 1 = 2 db, 15 = Mute 
- ******************************************************************************/
-void setSN76489voice2_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate);
-
-/***************************************************************************//**
- * @brief   Set sn76489 voice 3 attenuation
- * 
- * @param   p_sn76489 pointer to a struct that contains chip data.
- * @param   attenuate : 8 = 16db, 4 = 8db, 2 = 4db, 1 = 2 db, 15 = Mute 
- ******************************************************************************/
-void setSN76489voice3_attn(struct s_sn76489 *p_sn76489, uint8_t attenuate);
+void setSN76489voice_attn(struct s_sn76489 *p_sn76489, uint8_t voice, uint8_t attenuate);
 
 /***************************************************************************//**
  * @brief   Set sn76489 noise attenuation
