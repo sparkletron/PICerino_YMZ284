@@ -717,12 +717,16 @@ Wire Wire Line
 Wire Bus Line
 	3200 5750 1450 5750
 Wire Wire Line
-	3000 3800 3100 3800
-Wire Wire Line
-	3100 3800 3100 3600
-Wire Wire Line
-	3100 3600 3500 3600
+	3500 3600 3300 3600
 Connection ~ 3500 3600
+Wire Wire Line
+	3300 5050 3100 5050
+Wire Wire Line
+	3100 5050 3100 5000
+Wire Wire Line
+	3100 5000 3000 5000
+Wire Wire Line
+	3300 3600 3300 5050
 Wire Bus Line
 	3700 1800 3700 3400
 Wire Bus Line
