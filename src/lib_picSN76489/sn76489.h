@@ -38,17 +38,6 @@
 #include <xc.h>
 #include <stdint.h>
 
-// __DELAY_READY define, MUST USE _XTAL_FREQ define as well in this header.
-// #define __DELAY_READY
-// #define _XTAL_FREQ  48000000
-
-/**
- * @def __LOOP_READY
- * Use loop check of ready, default method. Its a bit slow, and has issues
- * with setting data multiple times.
- */
-//#define __LOOP_READY
-
 /**
  * @struct s_sn76489 
  * @brief Struct for containing sn76489 instances 
@@ -135,7 +124,7 @@ void setSN76489voice_freq(struct s_sn76489 *p_sn76489, uint8_t voice, uint16_t f
  * 
  * @param   p_sn76489 pointer to a struct that contains chip data.
  * @param   voice the voice (1,2, or 3) to set the attenuation to.
- * @param   attenuate : 8 = 16db, 4 = 8db, 2 = 4db, 1 = 2 db, 15 = Mute 
+ * @param   attenuate : 8 = 16db, 4 = 8db, 2 = 4db, 1 = 2 db, 0 = 0 db?, 15 = Mute 
  ******************************************************************************/
 void setSN76489voice_attn(struct s_sn76489 *p_sn76489, uint8_t voice, uint8_t attenuate);
 

@@ -128,6 +128,7 @@ void setSN76489voice_freq(struct s_sn76489 *p_sn76489, uint8_t voice, uint16_t f
   /**** NULL check ****/
   if(!p_sn76489) return;
   
+  /**** Select the correct register for the selected voice ****/
   switch(voice)
   {
     case 1:
@@ -156,6 +157,7 @@ void setSN76489voice_attn(struct s_sn76489 *p_sn76489, uint8_t voice, uint8_t at
   /**** NULL check ****/
   if(!p_sn76489) return;
   
+  /**** Select the correct register for the selected voice ****/
   switch(voice)
   {
     case 1:
@@ -201,20 +203,17 @@ void sendData(struct s_sn76489 *p_sn76489, uint8_t data)
   
   di();
   
-  /*** make sure we are ready for data ***/
+  /**** make sure we are ready for data ****/
+  /**** this method is very slow, only reason I am using it is its portable.
+   *    optimize this section to gain in speed with assembler or pin change irq.
+   ****/
   while(!((*(p_sn76489->p_readyPortR) >> p_sn76489->ready) & 0x01));
   
   *(p_sn76489->p_dataPortW) = data;
   
   *(p_sn76489->p_ctrlPortW) &= ~((unsigned)1 << p_sn76489->nCE) & ~((unsigned)1 << p_sn76489->nWE);;
   
-#ifdef __DELAY_READY
-  __delay_ms(10);
-#endif
-  
-#ifdef __LOOP_READY
   while(!((*(p_sn76489->p_readyPortR) >> p_sn76489->ready) & 0x01));
-#endif
   
   *(p_sn76489->p_ctrlPortW) |= ((unsigned)1 << p_sn76489->nCE) | ((unsigned)1 << p_sn76489->nWE);
   
