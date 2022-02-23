@@ -29,11 +29,7 @@ license: MIT
   
 ## Documentation
   - See doxygen generated document
-  - Three methods for ready check when setting data to output port.
-    1. Uncomment macro __DELAY_READY for timed delay.
-        - MUST SET __XTAL_FREQ IN HEADER FOR THIS TO WORK.
-    2. Uncomment macro __LOOP_READY for while loop that checks ready state.
-    3. Leave both commented for general delay in system. Works with no optimizations.
+  - Method for ready check is universal, NOT efficent. Optimize send data for your application! 
   
 ### Example Code
 ```c
@@ -60,17 +56,18 @@ void main(void)
   /* wait for chip to be ready */
   __delay_ms(10);
 
-  initSN76489port(&sn76489, &TRISA, &TRISD, &TRISC, 6, 7, 7);
+  initSN76489port(&sn76489, &TRISA, &TRISD, &TRISC, 6, 7, 0);
 
+  /* mutes all channels as default */
   initSN76489(&sn76489, &LATA, &LATD, &PORTC);
 
   /* voice one freq */
   
   /* set attenuation */
-  setSN76489voice1_attn(&sn76489, 2);
+  setSN76489voice_attn(&sn76489, 1, 2);
   
   /* set frequency to 440 hz */
-  setSN76489voice1_freq(&sn76489, 254);
+  setSN76489voice_freq(&sn76489, 1, 254);
   
   /* play this lovely tune forever */
   for(;;);
