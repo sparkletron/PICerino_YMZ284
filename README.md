@@ -1,10 +1,10 @@
-# PICerino SN76489 
+# PICerino YMZ284
 
-Test Board and Software Library for TI SN76489 sound chips.  
+Test Board and Software Library for Yamaha YMZ286 sound chips.
 
 author: Jay Convertino  
 
-date: 2022.01.27  
+date: 2024.04.21
 
 license: MIT (software/Hardware)
 
@@ -27,7 +27,7 @@ license: MIT (software/Hardware)
 Directory Listing:  
 
   - docs - Data documents for various ICs.
-  - schematic - KiCad schematic of SN76489 test board. See readme.md in dir for details.
+  - schematic - KiCad schematic of YMZ284 test board. See readme.md in dir for details.
   - src - Any source code for the project.
-    - lib_picSN76489 - library with test program for picerino. See readme.md in dir for details.
+    - lib_picYMZ284 - library with test program for picerino. See readme.md in dir for details.
 
