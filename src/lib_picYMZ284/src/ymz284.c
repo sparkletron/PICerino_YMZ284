@@ -181,7 +181,7 @@ void setYMZ284channel_attn(struct s_ymz284 *p_ymz284, char channel, uint8_t atte
   }
   
   sendAddr(p_ymz284, addr);
-  sendData(p_ymz284, (attenuate & 0x0F) | (select << 4));
+  sendData(p_ymz284, (attenuate & (unsigned)0x0F) | (unsigned)(select << 4));
 }
 
 void setYMZ284mixer(struct s_ymz284 *p_ymz284, uint8_t noise, uint8_t tone)
@@ -190,7 +190,7 @@ void setYMZ284mixer(struct s_ymz284 *p_ymz284, uint8_t noise, uint8_t tone)
   if(!p_ymz284) return;
 
   sendAddr(p_ymz284, MIXER_SETTING);
-  sendData(p_ymz284, (noise << 3) | tone);
+  sendData(p_ymz284, (unsigned)(noise << 3) | tone);
 }
 
 /*** set ymz284 noise frequency ***/
@@ -200,7 +200,7 @@ void setYMZ284noise_freq(struct s_ymz284 *p_ymz284, uint8_t freqDiv)
   if(!p_ymz284) return;
   
   sendAddr(p_ymz284, NOISE_FREQ);
-  sendData(p_ymz284, freqDiv & 0x001F);
+  sendData(p_ymz284, freqDiv & (unsigned)0x1F);
 }
 
 /*** set ymz284 envelope frequency***/
@@ -222,11 +222,11 @@ void setYMZ284env_shape(struct s_ymz284 *p_ymz284, uint8_t shape)
   if(!p_ymz284) return;
 
   sendAddr(p_ymz284, ENVELOPE_SHAPE);
-  sendData(p_ymz284, shape & 0x0F);
+  sendData(p_ymz284, shape & (unsigned)0x0F);
 }
 
 /*** send address to chip ***/
-void sendAddress(struct s_ymz284 *p_ymz284, uint8_t addr)
+void sendAddr(struct s_ymz284 *p_ymz284, uint8_t addr)
 {
   /**** NULL check ****/
   if(!p_ymz284) return;

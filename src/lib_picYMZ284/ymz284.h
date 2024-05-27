@@ -35,6 +35,9 @@
 #include <xc.h>
 #include <stdint.h>
 
+/* needed for delay in sendData, find a better way? */
+#define _XTAL_FREQ  48000000
+
 /**
  * @struct s_ymz284
  * @brief Struct for containing ymz284 instances
@@ -57,7 +60,7 @@ struct s_ymz284
    */
   uint8_t nCSWR;
   /**
-   * @var s_ymz::A0
+   * @var s_ymz284::A0
    * select data (H) or address (L) mode.
    */
   uint8_t A0;
@@ -70,6 +73,7 @@ struct s_ymz284
  * @param   p_dataTRIS pointer to data direction register.
  * @param   p_ctrlTRIS pointer to control direction register.
  * @param   nCSWR is the pin number(bit) nCS + WR is connected to on control port.
+ * @param   A0 Select Address (0) or Data register (1).
  ******************************************************************************/
 void initYMZ284port(struct s_ymz284 *p_ymz284, volatile unsigned char *p_dataTRIS, volatile unsigned char *p_ctrlTRIS, uint8_t nCSWR, uint8_t A0);
 
@@ -101,7 +105,7 @@ uint16_t getYMZ284_FreqDiv(uint32_t refClk, uint32_t channelFreq);
  *
  * @return  A unsigned 16 bit number that will result in the freqency wanted. (* 512)
  *  ******************************************************************************/
-uint16_t getYMZ284_EnvFreqDiv(uint32_t refClk, uint32_t channelFreq)
+uint16_t getYMZ284_EnvFreqDiv(uint32_t refClk, uint32_t channelFreq);
 
 /***************************************************************************//**
  * @brief   Set ymz284 channel frequency

@@ -1,6 +1,6 @@
 # PICerino YMZ284
 
-Test Board and Software Library for Yamaha YMZ286 sound chips.
+Test Board and Software Library for Yamaha YMZ284 sound chips.
 
 author: Jay Convertino  
 

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * @file      picTEST.c
  * @author    Jay Convertino
- * @date      2021.12.14
+ * @date      2024.05.27
  * @brief     Test PICerino platform
  ******************************************************************************/
 
@@ -42,7 +42,7 @@ void main(void)
   uint8_t  attn = 0;
   uint8_t  shiftRate = 0;
   
-  struct s_sn76489 sn76489;
+  struct s_ymz284 ymz284;
 
   /* OSCCON SETUP */
   OSCCONbits.IRCF = 0x7;
@@ -68,108 +68,48 @@ void main(void)
   g_porteBuffer = 1;
 
   /* wait for chip to be ready */
-  __delay_ms(10);
+  __delay_ms(100);
 
-  initSN76489port(&sn76489, &TRISA, &TRISD, &TRISC, 6, 7, 0);
+  initYMZ284port(&ymz284, &TRISA, &TRISD, 0, 1);
 
-  initSN76489(&sn76489, &LATA, &LATD, &PORTC);
+  initYMZ284(&ymz284, &LATA, &LATD);
 
   /* voice tests */
-  for(index = 1; index <= 3; index++)
+  for(index = 65; index <= 67; index++)
   {
-    attn = 0;
+    attn = ~0;
     freq = 0;
     
-    LATE = (unsigned)(1 << (index-1));
-    
-    setSN76489voice_attn(&sn76489, index, 2);
+    LATE = (unsigned)(1 << (index-65));
+
+    setYMZ284mixer(&ymz284, ~0, (1 << (index-65)));
+
+    setYMZ284channel_attn(&ymz284, (char)index, 15, 0);
     
     /* voice freq test */
     do
     {
-      setSN76489voice_freq(&sn76489, index, freq);
+      setYMZ284channel_freq(&ymz284, (char)index, freq);
       
       __delay_ms(5);
       
       freq++;
       
-    } while(freq < (1 << 10));
+    } while(freq < (1 << 12));
     
-    setSN76489voice_freq(&sn76489, index, 254);
+    setYMZ284channel_freq(&ymz284, (char)index, 254);
     
     /* voice attn test */
     do
     {
-      setSN76489voice_attn(&sn76489, index, attn);
-      
+      attn--;
+
+      setYMZ284channel_attn(&ymz284, (char)index, attn, 0);
+
       __delay_ms(500);
       
-      attn++;
-      
-    } while(attn < (1 << 4));
+    } while(attn > 0);
   }
- 
-  /* test noise */
-  attn = 0;
-  
-  LATE = 3;
-  
-  setSN76489noise_attn(&sn76489, 2);
-  
-  /** Periodic noise **/
-  do
-  {
-    setSN76489noiseCtrl(&sn76489, 0, shiftRate);
-    
-    __delay_ms(2000);
-    
-    shiftRate++;
-    
-  } while(shiftRate < (1 << 2));
-  
-  /* noise attn test */
-  do
-  {
-    setSN76489noise_attn(&sn76489, attn);
-    
-    __delay_ms(500);
-    
-    attn++;
-    
-  } while(attn < (1 << 4));
-  
-  shiftRate = 0;
-  
-  LATE = 6;
-  
-  setSN76489noise_attn(&sn76489, 2);
-  
-  /** White noise **/
-  do
-  {
-    setSN76489noiseCtrl(&sn76489, 1, shiftRate);
-    
-    __delay_ms(2000);
-    
-    shiftRate++;
-    
-  } while(shiftRate < (1 << 2));
-  
-  attn = 0;
-  
-  /* noise attn test */
-  do
-  {
-    setSN76489noise_attn(&sn76489, attn);
-    
-    __delay_ms(500);
-    
-    attn++;
-    
-  } while(attn < (1 << 4));
-  
-  /* done testing */
-  LATE = 0;
   
   for(;;)
   {
