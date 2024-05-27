@@ -8,7 +8,7 @@
 #include <xc.h>
 #include <stdint.h>
 
-#include <sn76489.h>
+#include <ymz284.h>
 
 //setup to XTAL freq, for _delay macros
 #define _XTAL_FREQ  48000000

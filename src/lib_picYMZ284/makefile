@@ -1,4 +1,4 @@
-PROJ_NAME = lib76489.a
+PROJ_NAME = ymz284.a
 SRCDIR = src
 SOURCE = $(wildcard $(SRCDIR)/*.c)
 HEADER = $(notdir $(SOURCE:.c=.h))
