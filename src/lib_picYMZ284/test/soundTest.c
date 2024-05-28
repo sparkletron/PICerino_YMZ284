@@ -77,12 +77,12 @@ void main(void)
   /* voice tests */
   for(index = 65; index <= 67; index++)
   {
-    attn = ~0;
+    attn = 16;
     freq = 0;
     
     LATE = (unsigned)(1 << (index-65));
 
-    setYMZ284mixer(&ymz284, ~0, (1 << (index-65)));
+    setYMZ284mixer(&ymz284, ~0, ~(1 << (index-65)));
 
     setYMZ284channel_attn(&ymz284, (char)index, 15, 0);
     

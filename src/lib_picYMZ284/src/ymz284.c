@@ -251,8 +251,6 @@ void sendData(struct s_ymz284 *p_ymz284, uint8_t data)
 
   *(p_ymz284->p_ctrlPortW) &= ~((unsigned)1 << p_ymz284->nCSWR);
 
-  __delay_us(1);
-
   *(p_ymz284->p_ctrlPortW) |= ((unsigned)1 << p_ymz284->nCSWR);
   
   ei();

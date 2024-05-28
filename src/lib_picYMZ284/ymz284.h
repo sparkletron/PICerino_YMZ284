@@ -35,9 +35,6 @@
 #include <xc.h>
 #include <stdint.h>
 
-/* needed for delay in sendData, find a better way? */
-#define _XTAL_FREQ  48000000
-
 /**
  * @struct s_ymz284
  * @brief Struct for containing ymz284 instances
