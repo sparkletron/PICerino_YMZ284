@@ -1,10 +1,10 @@
-# SN76489 Sound IC library
+# YMZ284 Sound IC library
 
-Software Library for TI SN76489 sound chips.  
+Software Library for Yamaha YMZ284 sound chips.
 
 author: Jay Convertino  
 
-data: 2022.01.31  
+data: 2024.05.27
 
 license: MIT
 
@@ -24,7 +24,7 @@ license: MIT
   - make : builds all
   - make dox_gen : doxygen only
   - make test : test only
-  - make libSN76489.a : static library only
+  - make libYMZ284.a : static library only
   - make clean : remove all build outputs.
   
 ## Documentation
@@ -33,9 +33,9 @@ license: MIT
   
 ### Example Code
 ```c
-void main(void) 
+void main(void)
 {
-  struct s_sn76489 sn76489;
+  struct s_ymz284 ymz284;
 
   /* OSCCON SETUP */
   OSCCONbits.IRCF = 0x7;
@@ -54,23 +54,19 @@ void main(void)
   ANSELE = 0;
 
   /* wait for chip to be ready */
-  __delay_ms(10);
+  __delay_ms(100);
 
-  initSN76489port(&sn76489, &TRISA, &TRISD, &TRISC, 6, 7, 0);
+  initYMZ284port(&ymz284, &TRISA, &TRISD, 0, 1);
 
-  /* mutes all channels as default */
-  initSN76489(&sn76489, &LATA, &LATD, &PORTC);
+  initYMZ284(&ymz284, &LATA, &LATD);
 
-  /* voice one freq */
-  
-  /* set attenuation */
-  setSN76489voice_attn(&sn76489, 1, 2);
-  
-  /* set frequency to 440 hz */
-  setSN76489voice_freq(&sn76489, 1, 254);
-  
+  setYMZ284mixer(&ymz284, ~0, ~1);
+
+  setYMZ284channel_attn(&ymz284, 'A', 15, 0);
+
+  setYMZ284channel_freq(&ymz284, 'A', 254);
+
   /* play this lovely tune forever */
   for(;;);
-  
 }
 ```
